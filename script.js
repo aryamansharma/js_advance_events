@@ -136,3 +136,7 @@ document.querySelector('.nav__links').addEventListener('click',(e) => {
     document.querySelector(e.target.getAttribute('href')).scrollIntoView({behavior : 'smooth'});
   }
 })
+
+const h1 = document.querySelector('h1');
+
+console.log(h1.closest('.header'));
