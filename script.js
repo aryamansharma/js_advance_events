@@ -8,6 +8,7 @@ const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const header = document.querySelector('.header');
+const nav = document.querySelector('.nav');
 
 const openModal = function (event) {
   event.preventDefault();
@@ -137,6 +138,38 @@ document.querySelector('.nav__links').addEventListener('click',(e) => {
   }
 })
 
-const h1 = document.querySelector('h1');
+// Operations tab handling
 
-console.log(h1.closest('.header'));
+const operationBtnContainer = document.querySelector('.operations__tab-container');
+const operationContents = document.querySelectorAll('.operations__content');
+const operationBtns = document.querySelectorAll('.operations__tab');
+
+
+operationBtnContainer.addEventListener('click', (e) => {
+  const clickedBtn = e.target.closest('.operations__tab');
+
+  if(!clickedBtn) return;
+
+  operationBtns.forEach((el) => {
+    el.classList.remove('operations__tab--active');
+  })
+
+  e.target.classList.add('operations__tab--active');
+
+  operationContents.forEach((el) => {
+    el.classList.remove('operations__content--active');
+  })
+
+  document.querySelector(`.operations__content--${clickedBtn.dataset.tab}`).classList.add('operations__content--active');
+})
+const initalCoords = section1.getBoundingClientRect();
+
+window.addEventListener('scroll' , () => {
+
+  if(window.scrollY > initalCoords.top){
+    nav.classList.add('sticky');
+  }
+  else {
+    nav.classList.remove('sticky');
+  }
+})
