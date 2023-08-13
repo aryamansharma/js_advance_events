@@ -77,10 +77,6 @@ btnScrollTo.addEventListener('click', (e) => {
 
 })
 
-window.addEventListener('keypress' , (e) => {
-  console.log(e);
-})
-
 // Event Propagation
 
 // const randomInt = (min, max) => {
@@ -167,23 +163,124 @@ operationBtnContainer.addEventListener('click', (e) => {
 // window.addEventListener('scroll' , () => {
 
 //   if(window.scrollY > initalCoords.top){
-//     nav.classList.add('sticky');
+    // nav.classList.add('sticky');
 //   }
 //   else {
 //     nav.classList.remove('sticky');
 //   }
 // })
 
-const obsCallback = (entries, observer) => {
-  entries.forEach(entry => {
-    console.log(entry);
-  })
-}
 
-const obsOptions ={
+// Intersection Observer API
+
+// const obsCallback = (entries, observer) => {
+//   entries.forEach(entry => {
+//     console.log(entry);
+//   })
+// }
+
+// const obsOptions ={
+//   root : null,
+//   threshold : 0
+// }
+
+// const observer = new IntersectionObserver(obsCallback, obsOptions);
+// observer.observe(section1);
+
+const obsHeader = new IntersectionObserver((entries, observer) => {
+  const [entry] = entries;
+    if(!entry.isIntersecting){
+      nav.classList.add('sticky');
+    }
+    else if(entry.isIntersecting){
+       nav.classList.remove('sticky');
+    }
+}, {
   root : null,
-  threshold : 0.5
-}
+  threshold : 0,
+  rootMargin : `-${nav.getBoundingClientRect().height}px`,
+});
+obsHeader.observe(header);
 
-const observer = new IntersectionObserver(obsCallback, obsOptions);
-observer.observe(section1);
+// Revealing sections
+
+// Section1
+// const obsSecrion1 = new IntersectionObserver((entries,observer)=> {
+//   const [entry] = entries;
+//   entry.isIntersecting ? section1.classList.remove('section--hidden') : section1.classList.add('section--hidden');
+// }, {
+//   root: null,
+//   threshold : 0,
+// }).observe(section1);
+
+// // Section2
+
+// const section2 = document.querySelector('#section--2');
+
+// const obsSecrion2 = new IntersectionObserver((entries,observer)=> {
+//   const [entry] = entries;
+//   entry.isIntersecting ? section2.classList.remove('section--hidden') : section2.classList.add('section--hidden');
+// }, {
+//   root: null,
+//   threshold : 0,
+// }).observe(section2);
+
+// // Section3
+
+// const section3 = document.querySelector('#section--3');
+
+// const obsSecrion3 = new IntersectionObserver((entries,observer)=> {
+//   const [entry] = entries;
+//   entry.isIntersecting ? section3.classList.remove('section--hidden') : section3.classList.add('section--hidden');
+// }, {
+//   root: null,
+//   threshold : 0,
+// }).observe(section3);
+
+const allSections = document.querySelectorAll('.section');
+
+const sectionObserver = new IntersectionObserver((entries, observer) => {
+  const [entry] = entries;
+
+  if(entry.isIntersecting){
+    entry.target.classList.remove('section--hidden');
+  }
+  else if(!entry.isIntersecting){
+    return
+  }
+  observer.unobserve(entry.target);
+}, {
+  root : null,
+  threshold : 0.15,
+});
+
+allSections.forEach((section) => {
+  sectionObserver.observe(section);
+  section.classList.add('section--hidden');
+});
+
+// Lazy Loading Image
+
+const obsLazyLoading = new IntersectionObserver((entries,observer) => {
+  const [entry] = entries;
+
+  if(entry.isIntersecting){
+    entry.target.src = entry.target.dataset.src;
+  }
+  else if(!entry.isIntersecting){
+    return
+  }
+  entry.target.addEventListener('load',(event) => {
+    entry.target.classList.remove('lazy-img');
+  });
+  observer.unobserve(entry.target);
+},{
+  root : null,
+  threshold : 0,
+  rootMargin : '200px',
+})
+
+const lazyImages = document.querySelectorAll('img[data-src]');
+lazyImages.forEach((img) => {
+  obsLazyLoading.observe(img);
+})
