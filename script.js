@@ -64,7 +64,7 @@ const section1 = document.querySelector('#section--1');
 btnScrollTo.addEventListener('click', (e) => {
   const s1coords = section1.getBoundingClientRect();
 
-  // Scrolling
+// Scrolling
   // old Browsers
   window.scrollTo({
     left : s1coords.left+window.pageXOffset, 
@@ -283,4 +283,10 @@ const obsLazyLoading = new IntersectionObserver((entries,observer) => {
 const lazyImages = document.querySelectorAll('img[data-src]');
 lazyImages.forEach((img) => {
   obsLazyLoading.observe(img);
+})
+
+window.addEventListener('beforeunload',(e) => {
+  console.log('beforeunload');
+  e.preventDefault();
+  e.returnValue = '';
 })
